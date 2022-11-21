@@ -14,7 +14,7 @@ public class Exercise3_2 {
         for(int i=0; i<=number-1;i++){
             System.out.println(i+1+"行目:");
             String b = input.nextLine();
-            test.add(new String(b));
+            test.add(b);
         }
         System.out.println("入力した文字列");
         for(String j:test){
