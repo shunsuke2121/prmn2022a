@@ -22,15 +22,19 @@ public class Shooting {
             long level_timer = 0;
             long Arufa=0;
             int Arufa_number = 0;
-            String dush=null;
+            ArrayList<Integer>Bariax = new ArrayList<>();
+            ArrayList<Integer>Bariay = new ArrayList<>();
             ShootingScreenEnum screen = ShootingScreenEnum.START;
 
             //GAME
             int playerX=0,playerY=0;
             int bulletInterval = 0;
+            int bulletInterval_bomm = 0;
+            int bulletInterval_baria = 0;
         ArrayList<Bullet> bullets_player= new ArrayList<>();
         ArrayList<Bullet> bullets_players_Bomm= new ArrayList<>();
         ArrayList<Bullet> bullets_players_Barria= new ArrayList<>();
+        ArrayList<Bullet> bullets_players_Repair= new ArrayList<>();
         ArrayList<Bullet> bullets_enemy= new ArrayList<>();
         ArrayList<Enemy1> enemies= new ArrayList<>();
         Random random = new Random();
@@ -53,17 +57,20 @@ public class Shooting {
                                 Font font = new Font("SansSerif",Font.PLAIN,60);
                                 graphics.setFont(font);
                                 FontMetrics metrics = graphics.getFontMetrics(font);
-                                graphics.drawString("shooting",(1000-metrics.stringWidth("shooting"))/2,250);
-
-                                font = new Font("BIZ UDP明朝 Medium",Font.PLAIN,60);
-                                graphics.setFont(font);
-                                metrics = graphics.getFontMetrics(font);
-                                graphics.drawString("SPASEを押してスタート",(1000-metrics.stringWidth("SPASEを押してスタート"))/2,500);
-                                if(keyboard.isKeypressed(KeyEvent.VK_SPACE)){
+//                                graphics.drawString("shooting",(1000-metrics.stringWidth("shooting"))/2,250);
+//                                font = new Font("BIZ UDP明朝 Medium",Font.PLAIN,60);
+//                                graphics.setFont(font);
+//                                metrics = graphics.getFontMetrics(font);
+//                                graphics.drawString("SPASEを押してスタート",(1000-metrics.stringWidth("SPASEを押してスタート"))/2,500);
+                            panel.image(graphics);
+                            if(keyboard.isKeypressed(KeyEvent.VK_SPACE)){
                                     screen = ShootingScreenEnum.GAME;
                                 bullets_player= new ArrayList<>();
                                 enemies= new ArrayList<>();//一応ゲーム開始時に初期化
                                 bullets_enemy = new ArrayList<>();//一応ゲーム開始時に初期化
+                                bullets_player= new ArrayList<>();
+                                bullets_players_Bomm= new ArrayList<>();
+                                bullets_players_Barria= new ArrayList<>();
                                 playerX = 480;
                                 playerY = 500;
                                 HP = 1000;
@@ -78,7 +85,7 @@ public class Shooting {
                                 level_timer = System.currentTimeMillis();
                                 level++;
                             }
-                            System.out.println("start"+starttime);
+                            //System.out.println("start"+starttime);
                             graphics.setColor(Color.blue);
                             graphics.fillRect(playerX+10,playerY,10,10);
                             graphics.fillRect(playerX,playerY+10,30,10);
@@ -129,7 +136,7 @@ public class Shooting {
                                 Bullet bullets = bullets_players_Barria.get(i);
                                 graphics.setColor(Color.yellow);
                                 graphics.fillRect(bullets.x, bullets.y, 200, 20);
-                                if (System.currentTimeMillis() - level_timer > 10*1000){//x秒でバリアが消える
+                                if (System.currentTimeMillis() - level_timer > 8*1000){//x秒でバリアが消える
                                     //画面外に言ったら弾をリストから消去する。
                                         bullets_players_Barria.remove(i);
                                         i--;
@@ -137,24 +144,13 @@ public class Shooting {
                                 }
                                 for (int l = 0; l < enemies.size(); l++) {
                                     Enemy1 enemy = enemies.get(l);
-                                    if((bullets.x>=enemy.x && bullets.x<=enemy.x+30 &&
+                                    if((bullets.x>=enemy.x && bullets.x<=enemy.x+200 &&
                                             bullets.y>=enemy.y&&bullets.y<=enemy.y+20) ||
-                                            (bullets.x+30>=enemy.x && bullets.x+30<=enemy.x+30 &&
+                                            (bullets.x+200>=enemy.x && bullets.x+200<=enemy.x+200 &&
                                                     bullets.y+20>=enemy.y&&bullets.y+20<=enemy.y+20)){
                                         enemies.remove(l);
                                         score +=10;
-                                        bullets_players_Barria.remove(i);
-                                    }
-                                }
-                                for (int l = 0; l < bullets_enemy.size(); l++) {
-                                    Bullet enemy = bullets_enemy.get(l);
-                                    if((bullets.x>=enemy.x && bullets.x<=enemy.x+30 &&
-                                            bullets.y>=enemy.y&&bullets.y<=enemy.y+20) ||
-                                            (bullets.x+30>=enemy.x && bullets.x+30<=enemy.x+30 &&
-                                                    bullets.y+20>=enemy.y&&bullets.y+20<=enemy.y+20)){
-                                        enemies.remove(l);
-                                        score +=10;
-                                        bullets_players_Barria.remove(i);
+                                        //bullets_players_Barria.remove(i);
                                     }
                                 }
                             }
@@ -182,7 +178,7 @@ public class Shooting {
                                     HP -= 100;
                                 }
                             }
-                            if (random.nextInt(level<1?15 - level:15)==1){
+                            if (random.nextInt(level<1?15 - level:15)==1){//三項演算子を用いたif文
                                     enemies.add(new Enemy1(random.nextInt(970), 0));
                                 }
 
@@ -203,16 +199,41 @@ public class Shooting {
                                         bullets_enemy.remove(i);
 
                                     }
+                                    for (int j = 0; j < bullets_players_Barria.size();j++){
+                                        //System.out.println(Bariax.get(j));
+                                        Bullet bullets = bullets_players_Barria.get(j); //playerx-90、playery-30が格納されている
+                                        if((bullets.x+200>=bullet.x && bullets.x+200<=bullet.x+200 &&
+                                                        bullets.y+20>=bullet.y&&bullets.y+20<=bullet.y+20)){
+                                            bullets_enemy.remove(i);
+                                        }
+                                    }
+                            }
+                            for (int i = 0; i < bullets_players_Repair.size(); i++) {//弾がなくなった際にリストの中身を消すため拡張for文を使えない
+                                Bullet bullet = bullets_players_Repair.get(i);
+                                graphics.setColor(Color.cyan);
+                                graphics.fillRect(bullet.x, bullet.y, 15, 20);
+                                graphics.fillRect(bullet.x+5, bullet.y-5,5,5);
+                                bullet.y += 4;
+                                if (bullet.y > 1000) {//画面外に言ったら弾をリストから消去する。
+                                    bullets_enemy.remove(i);
+                                    i--;}
                                     if((bullet.x>=playerX && bullet.x<=playerX+30 &&
                                             bullet.y>=playerY&&bullet.y<=playerY+20) ||
                                             (bullet.x+30>=playerX && bullet.x+30<=playerX+30 &&
                                             bullet.y+20>=playerY&&bullet.y+20<=playerY+20)){
-                                        score-=10;
-                                        HP -= 100;
+                                        score+=10;
+                                        HP += 100;
                                         bullets_enemy.remove(i);
 
                                     }
-
+                                    for (int j = 0; j < bullets_players_Barria.size();j++){
+                                        //System.out.println(Bariax.get(j));
+                                        Bullet bullets = bullets_players_Barria.get(j); //playerx-90、playery-30が格納されている
+                                        if((bullets.x+200>=bullet.x && bullets.x+200<=bullet.x+200 &&
+                                                        bullets.y+20>=bullet.y&&bullets.y+20<=bullet.y+20)){
+                                            bullets_enemy.remove(i);
+                                        }
+                                    }
                             }
                             if (keyboard.isKeypressed(KeyEvent.VK_A) && playerX>0){
                                 playerX-=10;
@@ -242,22 +263,34 @@ public class Shooting {
                                 bullets_player.add(new Bullet(playerX+12,playerY));
                                 bulletInterval = 10;
                             }
-                            if(keyboard.isKeypressed(KeyEvent.VK_CONTROL)&&bulletInterval ==0){
-                                bullets_players_Bomm.add(new Bullet(playerX+12,playerY));
-                                bulletInterval = 20;
+                            if(keyboard.isKeypressed(KeyEvent.VK_CONTROL)&&bulletInterval_bomm ==0){
+                                bullets_players_Bomm.add(new Bullet(playerX-10,playerY));
+                                bulletInterval_bomm = 100;
                             }
-                            if(keyboard.isKeypressed(KeyEvent.VK_C)&&bulletInterval ==0){
-                                bullets_players_Barria.add(new Bullet(playerX+12,playerY));
-                                bulletInterval = 100;
+                            if(keyboard.isKeypressed(KeyEvent.VK_C)&&bulletInterval_baria ==0){
+                                bullets_players_Barria.add(new Bullet(playerX-90,playerY-30));
+                                Bariax.add(playerX+12);//バリアの位置格納
+                                Bariay.add(playerY);
+                                bulletInterval_baria = 1000;
                             }
-
+                            System.out.println(bulletInterval_baria);
                             if (bulletInterval > 0)bulletInterval--;
+                            if (bulletInterval_bomm > 0)bulletInterval_bomm--;
+                            if (bulletInterval_baria > 0)bulletInterval_baria--;
                             graphics.setColor(Color.green);
                             font = new Font("SansSerif",Font.PLAIN,10);
                             graphics.setFont(font);
                             metrics = graphics.getFontMetrics(font);
                             graphics.drawString("SCORE"+score,980-metrics.stringWidth("SCORE"+score),950);
                             graphics.drawString("LEVEL"+level,980-metrics.stringWidth("LEVEL"+level),920);
+                            graphics.setColor(Color.yellow);
+                            graphics.fillRect(910,890,1000,10);
+                            graphics.setColor(Color.black);
+                            graphics.fillRect(1010-(bulletInterval_baria/10),890,1000,10);
+                            graphics.setColor(Color.green);
+                            graphics.fillRect(910,860,1000,10);
+                            graphics.setColor(Color.black);
+                            graphics.fillRect(1000-bulletInterval_bomm*5,860,1000,10);
                             graphics.setColor(Color.blue);
                             graphics.fillRect(0,0,HP,10);
                             if (HP<=0){
@@ -272,23 +305,42 @@ public class Shooting {
                                 Arufa_number+=1;
                                 System.out.println(Arufa_number);
                             }
-
-                            graphics.setColor(Color.red);
-                            font = new Font("BIZ UDP明朝 Medium",Font.PLAIN,200);
-                            graphics.setFont(font);
-                            metrics = graphics.getFontMetrics(font);
-                            graphics.drawString("死",(1000-metrics.stringWidth("死"))/2,500);
-                            font = new Font("SansSerif",Font.PLAIN,50);
-                            graphics.setFont(font);
-                            metrics = graphics.getFontMetrics(font);
-                            graphics.drawString("SCORE"+score,(1000-metrics.stringWidth("SCORE"+score))/2,700);
-                            font = new Font("BIZ UDP明朝 Medium",Font.PLAIN,50);
-                            graphics.setFont(font);
-                            metrics = graphics.getFontMetrics(font);
-                            graphics.drawString("ESCを押してトップ画面に戻る",(1000-metrics.stringWidth("ESCを押してトップ画面に戻る"))/2,200);
-                            graphics.setColor(new Color(0,0,0,255-Arufa_number));
-                            graphics.fillRect(0,0,1000,1000);
-                            if (keyboard.isKeypressed(KeyEvent.VK_ESCAPE))screen = ShootingScreenEnum.START;
+                            if(score>=1000) {
+                                graphics.setColor(Color.red);
+                                font = new Font("BIZ UDP明朝 Medium", Font.PLAIN, 200);
+                                graphics.setFont(font);
+                                metrics = graphics.getFontMetrics(font);
+                                graphics.drawString("よくぞ見事!!", (1000 - metrics.stringWidth("よくぞ見事!!")) / 2, 500);
+                                font = new Font("SansSerif", Font.PLAIN, 50);
+                                graphics.setFont(font);
+                                metrics = graphics.getFontMetrics(font);
+                                graphics.drawString("SCORE" + score, (1000 - metrics.stringWidth("SCORE" + score)) / 2, 700);
+                                font = new Font("BIZ UDP明朝 Medium", Font.PLAIN, 50);
+                                graphics.setFont(font);
+                                metrics = graphics.getFontMetrics(font);
+                                graphics.drawString("ESCを押してトップ画面に戻る", (1000 - metrics.stringWidth("ESCを押してトップ画面に戻る")) / 2, 200);
+                                graphics.setColor(new Color(0, 0, 0, 255 - Arufa_number));
+                                graphics.fillRect(0, 0, 1000, 1000);
+                                if (keyboard.isKeypressed(KeyEvent.VK_ESCAPE)) screen = ShootingScreenEnum.START;
+                            }
+                            else{
+                                graphics.setColor(Color.red);
+                                font = new Font("BIZ UDP明朝 Medium", Font.PLAIN, 200);
+                                graphics.setFont(font);
+                                metrics = graphics.getFontMetrics(font);
+                                graphics.drawString("死", (1000 - metrics.stringWidth("死")) / 2, 500);
+                                font = new Font("SansSerif", Font.PLAIN, 50);
+                                graphics.setFont(font);
+                                metrics = graphics.getFontMetrics(font);
+                                graphics.drawString("SCORE" + score, (1000 - metrics.stringWidth("SCORE" + score)) / 2, 700);
+                                font = new Font("BIZ UDP明朝 Medium", Font.PLAIN, 50);
+                                graphics.setFont(font);
+                                metrics = graphics.getFontMetrics(font);
+                                graphics.drawString("ESCを押してトップ画面に戻る", (1000 - metrics.stringWidth("ESCを押してトップ画面に戻る")) / 2, 200);
+                                graphics.setColor(new Color(0, 0, 0, 255 - Arufa_number));
+                                graphics.fillRect(0, 0, 1000, 1000);
+                                if (keyboard.isKeypressed(KeyEvent.VK_ESCAPE)) screen = ShootingScreenEnum.START;
+                            }
                                 break;
                 }
 
