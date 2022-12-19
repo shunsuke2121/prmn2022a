@@ -1,6 +1,7 @@
 package ex6;
 
 import java.util.Scanner;
+import java.util.InputMismatchException;
 
 public class Exercise6_1 {
     public static void main(String[] args) {
@@ -9,7 +10,7 @@ public class Exercise6_1 {
         try{
             input.nextDouble();
         }
-        catch (Exception e){
+        catch (InputMismatchException e){
             System.out.println("エラー");
         }
     }

@@ -30,6 +30,7 @@ public class Shooting {
             int bulletInterval = 0;
         ArrayList<Bullet> bullets_player= new ArrayList<>();
         ArrayList<Bullet> bullets_players_Bomm= new ArrayList<>();
+        ArrayList<Bullet> bullets_players_Barria= new ArrayList<>();
         ArrayList<Bullet> bullets_enemy= new ArrayList<>();
         ArrayList<Enemy1> enemies= new ArrayList<>();
         Random random = new Random();
@@ -68,6 +69,8 @@ public class Shooting {
                                 HP = 1000;
                                 score = 0;
                                 level = 1;
+                                Arufa_number=0;
+                                Arufa=0;
                                 }
                                 break;
                         case GAME:
@@ -113,17 +116,48 @@ public class Shooting {
                                 }
                                 for (int l = 0; l < enemies.size(); l++) {
                                     Enemy1 enemy = enemies.get(l);
-                                    if((bullet.x>=enemy.x && bullet.x<=enemy.x+30 &&
-                                            bullet.y>=enemy.y&&bullet.y<=enemy.y+20) ||
+                                    if((bullet.x>=enemy.x-40 && bullet.x<=enemy.x+70 &&
+                                            bullet.y>=enemy.y&&bullet.y<=enemy.y+30) ||
                                             (bullet.x+30>=enemy.x && bullet.x+30<=enemy.x+30 &&
                                                     bullet.y+20>=enemy.y&&bullet.y+20<=enemy.y+20)){
                                         enemies.remove(l);
                                         score +=10;
-                                        bullets_players_Bomm.remove(i);
                                     }
                                 }
                             }
+                            for (int i = 0; i < bullets_players_Barria.size(); i++) {//弾がなくなった際にリストの中身を消すため拡張for文を使えない
+                                Bullet bullets = bullets_players_Barria.get(i);
+                                graphics.setColor(Color.yellow);
+                                graphics.fillRect(bullets.x, bullets.y, 200, 20);
+                                if (System.currentTimeMillis() - level_timer > 10*1000){//x秒でバリアが消える
+                                    //画面外に言ったら弾をリストから消去する。
+                                        bullets_players_Barria.remove(i);
+                                        i--;
 
+                                }
+                                for (int l = 0; l < enemies.size(); l++) {
+                                    Enemy1 enemy = enemies.get(l);
+                                    if((bullets.x>=enemy.x && bullets.x<=enemy.x+30 &&
+                                            bullets.y>=enemy.y&&bullets.y<=enemy.y+20) ||
+                                            (bullets.x+30>=enemy.x && bullets.x+30<=enemy.x+30 &&
+                                                    bullets.y+20>=enemy.y&&bullets.y+20<=enemy.y+20)){
+                                        enemies.remove(l);
+                                        score +=10;
+                                        bullets_players_Barria.remove(i);
+                                    }
+                                }
+                                for (int l = 0; l < bullets_enemy.size(); l++) {
+                                    Bullet enemy = bullets_enemy.get(l);
+                                    if((bullets.x>=enemy.x && bullets.x<=enemy.x+30 &&
+                                            bullets.y>=enemy.y&&bullets.y<=enemy.y+20) ||
+                                            (bullets.x+30>=enemy.x && bullets.x+30<=enemy.x+30 &&
+                                                    bullets.y+20>=enemy.y&&bullets.y+20<=enemy.y+20)){
+                                        enemies.remove(l);
+                                        score +=10;
+                                        bullets_players_Barria.remove(i);
+                                    }
+                                }
+                            }
                             graphics.setColor(Color.red);
 
                             for (int i = 0; i < enemies.size(); i++) {
@@ -169,6 +203,15 @@ public class Shooting {
                                         bullets_enemy.remove(i);
 
                                     }
+                                    if((bullet.x>=playerX && bullet.x<=playerX+30 &&
+                                            bullet.y>=playerY&&bullet.y<=playerY+20) ||
+                                            (bullet.x+30>=playerX && bullet.x+30<=playerX+30 &&
+                                            bullet.y+20>=playerY&&bullet.y+20<=playerY+20)){
+                                        score-=10;
+                                        HP -= 100;
+                                        bullets_enemy.remove(i);
+
+                                    }
 
                             }
                             if (keyboard.isKeypressed(KeyEvent.VK_A) && playerX>0){
@@ -183,6 +226,18 @@ public class Shooting {
                             if (keyboard.isKeypressed(KeyEvent.VK_S) && playerY <940){
                                 playerY+=10;
                             }
+                            if (keyboard.isKeypressed(KeyEvent.VK_LEFT) && playerX>0){
+                                playerX-=10;
+                            }
+                            if (keyboard.isKeypressed(KeyEvent.VK_RIGHT) && playerX<942){
+                                playerX+=10;
+                            }
+                            if (keyboard.isKeypressed(KeyEvent.VK_UP) && playerY >0){
+                                playerY-=10;
+                            }
+                            if (keyboard.isKeypressed(KeyEvent.VK_DOWN) && playerY <940){
+                                playerY+=10;
+                            }
                             if(keyboard.isKeypressed(KeyEvent.VK_SPACE)&&bulletInterval ==0){
                                 bullets_player.add(new Bullet(playerX+12,playerY));
                                 bulletInterval = 10;
@@ -191,6 +246,11 @@ public class Shooting {
                                 bullets_players_Bomm.add(new Bullet(playerX+12,playerY));
                                 bulletInterval = 20;
                             }
+                            if(keyboard.isKeypressed(KeyEvent.VK_C)&&bulletInterval ==0){
+                                bullets_players_Barria.add(new Bullet(playerX+12,playerY));
+                                bulletInterval = 100;
+                            }
+
                             if (bulletInterval > 0)bulletInterval--;
                             graphics.setColor(Color.green);
                             font = new Font("SansSerif",Font.PLAIN,10);

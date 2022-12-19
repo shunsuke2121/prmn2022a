@@ -10,12 +10,12 @@ public class Exercise6_2 {
         Scanner input = new Scanner(System.in);
         //System.out.println(random.nextInt(100));
         ArrayList <Integer> dice = new ArrayList<>();
-        dice.add(random.nextInt(5)+1);
-        dice.add(random.nextInt(5)+1);
-        dice.add(random.nextInt(5)+1);
-        dice.add(random.nextInt(5)+1);
-        dice.add(random.nextInt(5)+1);
-        dice.add(random.nextInt(5)+1);
+        dice.add(random.nextInt(6)+1);
+        dice.add(random.nextInt(6)+1);
+        dice.add(random.nextInt(6)+1);
+        dice.add(random.nextInt(6)+1);
+        dice.add(random.nextInt(6)+1);
+        dice.add(random.nextInt(6)+1);
         System.out.println("さいころを5つ振りました.\n" + "何番目のさいころの値を確認しますか？");
         try {
             int number = input.nextInt();
