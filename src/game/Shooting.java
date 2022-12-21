@@ -178,6 +178,33 @@ public class Shooting {
                                     HP -= 100;
                                 }
                             }
+                            for (int i = 0; i < enemies.size(); i++) {
+                                Enemy1 enemy = enemies.get(i);
+                                graphics.fillRect(enemy.x+10, enemy.y,10,10);
+                                graphics.fillRect(enemy.x, enemy.y-10,30,10);
+                                enemy.y+=3;
+                                if(random.nextInt(11)>4){
+                                    enemy.x+=2;
+                                }else {
+                                    enemy.x-=2;
+                                }
+                                if(enemy.y>1000){
+                                    enemies.remove(i);
+                                    i--;
+                                }
+                                if (random.nextInt(level<1?1000 - level:100)==1){
+                                    bullets_enemy.add(new Bullet(enemy.x,enemy.y));
+                                }
+
+                                if (random.nextInt(level<1?1000 - level:100)==1){
+                                    bullets_enemy.add(new Bullet(enemy.x,enemy.y));
+                                }
+                                if(enemy.x>=playerX && enemy.x<=playerX+30 &&
+                                        enemy.y>=playerY&&enemy.y<=playerY+20){
+                                    score-=10;
+                                    HP -= 100;
+                                }
+                            }
                             if (random.nextInt(level<1?15 - level:15)==1){//三項演算子を用いたif文
                                     enemies.add(new Enemy1(random.nextInt(970), 0));
                                 }
