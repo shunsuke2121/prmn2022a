@@ -13,12 +13,13 @@ public class Shooting {
             //FPS
             long starttime;
             long fpstime=0;
-            int fps =60;
+            int fps =120;
             int FPS = 0;
             int fpsCount =0;
             int score=0;
             int HP=1000;
             int level=0;
+            int fontInterval=100;
             long level_timer = 0;
             long Arufa=0;
             int Arufa_number = 0;
@@ -38,6 +39,7 @@ public class Shooting {
         ArrayList<Bullet> bullets_enemy= new ArrayList<>();
         ArrayList<Enemy1> enemies= new ArrayList<>();
         Random random = new Random();
+        panel.readImage();
         while (loop) {
                 if ((System.currentTimeMillis()-fpstime)>=1000){
                         fpstime = System.currentTimeMillis();
@@ -74,7 +76,7 @@ public class Shooting {
                                 playerX = 480;
                                 playerY = 500;
                                 HP = 1000;
-                                score = 0;
+                                score = 10000;
                                 level = 1;
                                 Arufa_number=0;
                                 Arufa=0;
@@ -176,6 +178,7 @@ public class Shooting {
                                         enemy.y>=playerY&&enemy.y<=playerY+20){
                                     score-=10;
                                     HP -= 100;
+                                    enemies.remove(i);
                                 }
                             }
                             for (int i = 0; i < enemies.size(); i++) {
@@ -332,12 +335,26 @@ public class Shooting {
                                 Arufa_number+=1;
                                 System.out.println(Arufa_number);
                             }
+                            graphics.setColor(Color.white);
+                            graphics.fillRect(0,0,1000,1000);
+
                             if(score>=1000) {
-                                graphics.setColor(Color.red);
-                                font = new Font("BIZ UDP明朝 Medium", Font.PLAIN, 200);
-                                graphics.setFont(font);
-                                metrics = graphics.getFontMetrics(font);
-                                graphics.drawString("よくぞ見事!!", (1000 - metrics.stringWidth("よくぞ見事!!")) / 2, 500);
+                                graphics.setColor(Color.black);
+                                if (fontInterval%51<25){
+                                    graphics.setColor(Color.yellow);
+                                    font = new Font("BIZ UDP明朝 Medium", Font.PLAIN, 175);
+                                    graphics.setFont(font);
+                                    metrics = graphics.getFontMetrics(font);
+                                    graphics.drawString("よくぞ見事!!", (1000 - metrics.stringWidth("よくぞ見事!!")) / 2, 500);
+
+                                }
+                                else {
+                                    graphics.setColor(Color.red);
+                                    font = new Font("BIZ UDP明朝 Medium", Font.PLAIN, 175);
+                                    graphics.setFont(font);
+                                    metrics = graphics.getFontMetrics(font);
+                                    graphics.drawString("よくぞ見事!!", (1000 - metrics.stringWidth("よくぞ見事!!")) / 2, 500);
+                                }
                                 font = new Font("SansSerif", Font.PLAIN, 50);
                                 graphics.setFont(font);
                                 metrics = graphics.getFontMetrics(font);
@@ -349,6 +366,7 @@ public class Shooting {
                                 graphics.setColor(new Color(0, 0, 0, 255 - Arufa_number));
                                 graphics.fillRect(0, 0, 1000, 1000);
                                 if (keyboard.isKeypressed(KeyEvent.VK_ESCAPE)) screen = ShootingScreenEnum.START;
+                                fontInterval++;
                             }
                             else{
                                 graphics.setColor(Color.red);
@@ -368,6 +386,7 @@ public class Shooting {
                                 graphics.fillRect(0, 0, 1000, 1000);
                                 if (keyboard.isKeypressed(KeyEvent.VK_ESCAPE)) screen = ShootingScreenEnum.START;
                             }
+
                                 break;
                 }
 
@@ -380,7 +399,7 @@ public class Shooting {
                 try {
                         long runTime = System.currentTimeMillis() - starttime;
                         if (runTime<(1000/fps)){
-                                Thread.sleep((1000/fps) - (runTime)); //処理時間が16msより小さければ待機、出なければ次へ
+                                Thread.sleep((1000/fps) - (runTime)); //処理時間が(1000/fps)msより小さければ待機、出なければ次へ
                         }
                 }catch (InterruptedException e){
                         e.printStackTrace();
