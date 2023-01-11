@@ -13,7 +13,7 @@ public class Shooting {
             //FPS
             long starttime;
             long fpstime=0;
-            int fps =120;
+            int fps =60;
             int FPS = 0;
             int fpsCount =0;
             int score=0;
@@ -76,7 +76,7 @@ public class Shooting {
                                 playerX = 480;
                                 playerY = 500;
                                 HP = 1000;
-                                score = 10000;
+                                score = 000;
                                 level = 1;
                                 Arufa_number=0;
                                 Arufa=0;
