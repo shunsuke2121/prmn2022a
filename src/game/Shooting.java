@@ -21,6 +21,7 @@ public class Shooting {
             int level=0;
             int fontInterval=100;
             long level_timer = 0;
+            long baria_timer = 0;
             long Arufa=0;
             int Arufa_number = 0;
             ArrayList<Integer>Bariax = new ArrayList<>();
@@ -76,10 +77,15 @@ public class Shooting {
                                 playerX = 480;
                                 playerY = 500;
                                 HP = 1000;
-                                score = 000;
+                                score = 1000;
                                 level = 1;
                                 Arufa_number=0;
                                 Arufa=0;
+                                bulletInterval = 0;
+                                bulletInterval_bomm = 0;
+                                bulletInterval_baria = 0;
+                                level_timer = 0;
+                                baria_timer = 0;
                                 }
                                 break;
                         case GAME:
@@ -138,21 +144,23 @@ public class Shooting {
                                 Bullet bullets = bullets_players_Barria.get(i);
                                 graphics.setColor(Color.yellow);
                                 graphics.fillRect(bullets.x, bullets.y, 200, 20);
-                                if (System.currentTimeMillis() - level_timer > 8*1000){//x秒でバリアが消える
+                                System.out.println(System.currentTimeMillis() - baria_timer);
+                                if (System.currentTimeMillis() - baria_timer > 8*1000){//x秒でバリアが消える
                                     //画面外に言ったら弾をリストから消去する。
                                         bullets_players_Barria.remove(i);
+                                        baria_timer = System.currentTimeMillis();
                                         i--;
 
                                 }
                                 for (int l = 0; l < enemies.size(); l++) {
                                     Enemy1 enemy = enemies.get(l);
-                                    if((bullets.x>=enemy.x && bullets.x<=enemy.x+200 &&
-                                            bullets.y>=enemy.y&&bullets.y<=enemy.y+20) ||
-                                            (bullets.x+200>=enemy.x && bullets.x+200<=enemy.x+200 &&
-                                                    bullets.y+20>=enemy.y&&bullets.y+20<=enemy.y+20)){
+                                    if((bullets.x<=enemy.x && bullets.x+200>=enemy.x &&
+                                            bullets.y>=enemy.y&&bullets.y<=enemy.y+20)
+                                            //||(bullets.x+200>=enemy.x && bullets.x+200<=enemy.x+200 &&
+//                                                    bullets.y+20>=enemy.y&&bullets.y+20<=enemy.y+20)
+                                                    ){
                                         enemies.remove(l);
                                         score +=10;
-                                        //bullets_players_Barria.remove(i);
                                     }
                                 }
                             }
@@ -221,9 +229,7 @@ public class Shooting {
                                     bullets_enemy.remove(i);
                                     i--;}
                                     if((bullet.x>=playerX && bullet.x<=playerX+30 &&
-                                            bullet.y>=playerY&&bullet.y<=playerY+20) ||
-                                            (bullet.x+30>=playerX && bullet.x+30<=playerX+30 &&
-                                            bullet.y+20>=playerY&&bullet.y+20<=playerY+20)){
+                                            bullet.y>=playerY&&bullet.y<=playerY+20)){
                                         score-=10;
                                         HP -= 100;
                                         bullets_enemy.remove(i);
@@ -302,6 +308,7 @@ public class Shooting {
                                 Bariax.add(playerX+12);//バリアの位置格納
                                 Bariay.add(playerY);
                                 bulletInterval_baria = 1000;
+                                baria_timer = System.currentTimeMillis();
                             }
                             System.out.println(bulletInterval_baria);
                             if (bulletInterval > 0)bulletInterval--;
@@ -316,7 +323,7 @@ public class Shooting {
                             graphics.setColor(Color.yellow);
                             graphics.fillRect(910,890,1000,10);
                             graphics.setColor(Color.black);
-                            graphics.fillRect(1010-(bulletInterval_baria/10),890,1000,10);
+                            graphics.fillRect(1000-(bulletInterval_baria/10),890,1000,10);
                             graphics.setColor(Color.green);
                             graphics.fillRect(910,860,1000,10);
                             graphics.setColor(Color.black);
