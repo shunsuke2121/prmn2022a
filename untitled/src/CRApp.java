@@ -1,8 +1,3 @@
-package AI;
-
-import java.util.ArrayList;
-import java.util.Scanner;
-
 /**
  * 文字認識(Character Recognition)
  * @author tkato
@@ -11,42 +6,28 @@ import java.util.Scanner;
 public class CRApp {
 
 	static final int MASS_X = 6; // マス目の数（縦）
-	static final int MASS_Y = 6; // マス目の数（横）
+	static final int MASS_Y = 1; // マス目の数（横）
 
 	public static void main(String[] args) {
-		int count =0;
-		NeuralNet nn = new NeuralNet(36, 36, 3);
-		Scanner scanner = new Scanner(System.in);
+
+		NeuralNet nn = new NeuralNet(6, 6, 4);
+
+		// 訓練データ（入力）
 		double knownInputs[][] = {
-
+			{ // 0の訓練データ
+					0, 0, 1, 1, 0, 0
+			},
+			{ // 1の訓練データ
+			  0, 0, 0, 1, 0, 0
+			}
 		};
-		System.out.println("出す手を決めてグー:0 チョキ:1 パー:2");
-		int Action = scanner.nextInt();
-		switch (Action){		// 訓練データ（入力）
-			case 0:
-				knownInputs[count][0] =1;
-				knownInputs[count][1] =0;
-				knownInputs[count][2] =0;
-			case 1:
-				knownInputs[count][0] =0;
-				knownInputs[count][1] =1;
-				knownInputs[count][2] =0;
-			case 2:
-				knownInputs[count][0] =0;
-				knownInputs[count][1] =0;
-				knownInputs[count][2] =1;
-			default:
-		}
-
 
 		// 教師データ
 		double t[][] = {
-				{1, 0, 0}, // この組み合わせをグーとする
-				{0, 1, 0},// この組み合わせをチョキとする
-				{0, 0, 1}// この組み合わせをパーとする
+				{0, 0, 0, 0}, // この組み合わせを0とする
+				{0, 0, 0, 1}  // この組み合わせを1とする
 		};
 
-		System.out.println(t[0][0]);
 		// 学習
 		System.out.println("--学習開始--");
 		nn.learn(knownInputs, t);
@@ -57,28 +38,18 @@ public class CRApp {
 		// 推定はここから
 		// ---------------------
 		double[][] unknownInputs = {
-
+			{ // 0の入力データ
+			  0, 1, 1, 1, 1, 0
+			},
+			{ // 1の入力データ
+			  0, 0, 0, 0, 0, 0
+			}
 		};
-		switch (Action) {        // 訓練データ（入力）
-			case 0:
-				unknownInputs[count][0] = 1;
-				unknownInputs[count][1] = 0;
-				unknownInputs[count][2] = 0;
-			case 1:
-				unknownInputs[count][0] = 0;
-				unknownInputs[count][1] = 1;
-				unknownInputs[count][2] = 0;
-			case 2:
-				unknownInputs[count][0] = 0;
-				unknownInputs[count][1] = 0;
-				unknownInputs[count][2] = 1;
-			default:
-		}
+
 		// 教師データ
 		double expects[][] = {
-				{1, 0, 0}, // この組み合わせをグーとする
-				{0, 1, 0},// この組み合わせをチョキとする
-				{0, 0, 1}// この組み合わせをパーとする
+				{0, 0, 0, 0}, // この組み合わせを0とする
+				{0, 0, 0, 1}  // この組み合わせを1とする
 		};
 
 		for ( int i=0; i<unknownInputs.length; i++ ) {
@@ -113,6 +84,10 @@ public class CRApp {
 		int v2 = (int)(a[1]+0.5);
 		int v3 = (int)(a[2]+0.5);
 		int v4 = (int)(a[3]+0.5);
+		System.out.println(a[0]);
+		System.out.println(a[1]);
+		System.out.println(a[2]);
+		System.out.println(a[3]);
 
 		// 出力層の値
 		return v1 * 8 + v2 * 4 + v3 * 2 + v4 * 1;

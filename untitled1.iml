@@ -7,8 +7,5 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jackson-core-2.14.1-javadoc" level="project" />
-    <orderEntry type="library" name="jackson-core-2.14.1" level="project" />
-    <orderEntry type="library" name="jackson-databind-2.14.1" level="project" />
   </component>
 </module>
