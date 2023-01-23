@@ -1,5 +1,7 @@
 package AI3;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class NeuralNet {
@@ -50,11 +52,12 @@ public class NeuralNet {
 	}
 
 	// NNに入力し、出力を計算する
-	public double[] compute(double x[]){
+	public double[] compute(List<Double> x){
 
 		// 入力層の入力
 		for(int i=0; i<N_INPUT; i++){
-			input[i] = x[i];
+			//System.out.println(x.get(i));
+			input[i] = x.get(i);
 		}
 
 		// 中間層の計算
@@ -87,14 +90,15 @@ public class NeuralNet {
 	}
 
 	// 誤差逆伝播法による重みの更新
-	public void backPropagation(double teach[]){
+	public void backPropagation(List<Double> teach){
 
 		// 誤差
 		double[] deltas = new double[N_OUTPUT];
 
 		// 中間層>出力層の重みを更新
 		for(int j=0; j<N_OUTPUT; j++){
-			deltas[j] = (teach[j]-output[j]) * output[j] * (1.0-output[j]);
+			//System.out.println(teach.get(j));
+			deltas[j] = (teach.get(j) -output[j]) * output[j] * (1.0-output[j]);
 			for(int i=0; i<N_HIDDEN; i++){
 				w2[i][j] += alpha * deltas[j] * hidden[i];
 			}
@@ -118,28 +122,29 @@ public class NeuralNet {
 	}
 
 	// 二乗誤差
-	public double calcError(double teach[]){
+	public double calcError(List<Double> teach){
 		double e = 0.0;
-		for(int i=0; i<teach.length; i++){
-			e += Math.pow(teach[i]-output[i], 2.0);
+		for(int i=0; i<teach.size(); i++){
+			e += Math.pow(teach.get(i)-output[i], 2.0);
 		}
 		e *= 0.5;
 		return e;
 	}
 
 	// 学習
-	public void learn( double[][] knownInputs, double[][] teach ) {
+	public void learn(ArrayList<List<Double>>knownInputs, ArrayList<List<Double>> teach ) {
 
 		int step = 0; //試行回数
+		System.out.println("step"+step);
 		while ( true ) {
 
 			double e = 0.0; // 二乗誤差の総和(初期値は0.0)
 
 			// すべての訓練データをニューラルネットワークに入力・計算・誤差伝搬
-			for(int i=0; i<knownInputs.length; i++){
-				compute(knownInputs[i]);
-				e += calcError(teach[i]);
-				backPropagation(teach[i]);
+			for(int i=0; i<knownInputs.size(); i++){
+				compute(knownInputs.get(i));
+				e += calcError(teach.get(i));
+				backPropagation(teach.get(i));
 			}
 
 			// 100刻みで誤差を表示
@@ -148,7 +153,10 @@ public class NeuralNet {
 			}
 
 			// 二乗誤差が十分小さくなったら、終了
-			if(e < 0.0001){
+//			if(e < 0.01){
+//				break;
+//			}
+			if(e < 15){
 				break;
 			}
 
